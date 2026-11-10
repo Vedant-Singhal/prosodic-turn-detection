@@ -1,0 +1,3 @@
+data: X=(496, 43) eot=200  features=43
+CV ElasticNet+AC+dur-w: eng=1134ms hin=850ms AUC=0.656
+saved -> eot_model.pkl

@@ -1,0 +1,103 @@
+=== single models (OOF) ===
+OOF ENET/dur05/eot1.0                      eng=  1193 hin=   857 lhAUC=0.468 hop=(0.05,850)
+OOF ENET/dur05/eot1.5                      eng=  1134 hin=   850 lhAUC=0.463 hop=(0.05,850)
+OOF ENET/dur05/eot2.5                      eng=  1217 hin=   850 lhAUC=0.462 hop=(0.05,850)
+OOF L2/dur05/eot1.0                        eng=  1180 hin=   872 lhAUC=0.459 hop=(0.05,850)
+OOF L2/dur05/eot1.5                        eng=  1200 hin=   850 lhAUC=0.457 hop=(0.05,850)
+OOF L2/dur05/eot2.5                        eng=  1180 hin=   850 lhAUC=0.459 hop=(0.05,850)
+OOF ENET/dur10/eot1.0                      eng=  1200 hin=   865 lhAUC=0.474 hop=(0.05,850)
+OOF ENET/dur10/eot1.5                      eng=  1200 hin=   850 lhAUC=0.472 hop=(0.05,850)
+OOF ENET/dur10/eot2.5                      eng=  1190 hin=   850 lhAUC=0.470 hop=(0.05,850)
+OOF L2/dur10/eot1.0                        eng=  1200 hin=   857 lhAUC=0.459 hop=(0.05,850)
+OOF L2/dur10/eot1.5                        eng=  1210 hin=   850 lhAUC=0.461 hop=(0.05,850)
+OOF L2/dur10/eot2.5                        eng=  1210 hin=   850 lhAUC=0.464 hop=(0.05,850)
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+OOF ENET/dur20/eot1.0                      eng=  1201 hin=   857 lhAUC=0.494 hop=(0.05,850)
+OOF ENET/dur20/eot1.5                      eng=  1210 hin=   857 lhAUC=0.506 hop=(0.05,850)
+OOF ENET/dur20/eot2.5                      eng=  1200 hin=   850 lhAUC=0.508 hop=(0.05,850)
+OOF L2/dur20/eot1.0                        eng=  1250 hin=   857 lhAUC=0.500 hop=(0.05,850)
+OOF L2/dur20/eot1.5                        eng=  1260 hin=   857 lhAUC=0.498 hop=(0.05,850)
+OOF L2/dur20/eot2.5                        eng=  1222 hin=   857 lhAUC=0.499 hop=(0.05,850)
+OOF ENET/hard08/eot1.0                     eng=  1210 hin=   865 lhAUC=0.494 hop=(0.05,850)
+OOF ENET/hard08/eot1.5                     eng=  1220 hin=   850 lhAUC=0.498 hop=(0.05,850)
+OOF ENET/hard08/eot2.5                     eng=  1225 hin=   850 lhAUC=0.501 hop=(0.05,850)
+OOF L2/hard08/eot1.0                       eng=  1192 hin=   865 lhAUC=0.490 hop=(0.05,850)
+OOF L2/hard08/eot1.5                       eng=  1201 hin=   850 lhAUC=0.491 hop=(0.05,850)
+OOF L2/hard08/eot2.5                       eng=  1240 hin=   850 lhAUC=0.493 hop=(0.05,850)
+OOF ENET/hard07/eot1.0                     eng=  1172 hin=   872 lhAUC=0.510 hop=(0.05,850)
+OOF ENET/hard07/eot1.5                     eng=  1182 hin=   850 lhAUC=0.512 hop=(0.05,850)
+OOF ENET/hard07/eot2.5                     eng=  1202 hin=   850 lhAUC=0.518 hop=(0.05,850)
+OOF L2/hard07/eot1.0                       eng=  1195 hin=   872 lhAUC=0.507 hop=(0.05,850)
+OOF L2/hard07/eot1.5                       eng=  1195 hin=   850 lhAUC=0.508 hop=(0.05,850)
+OOF L2/hard07/eot2.5                       eng=  1270 hin=   850 lhAUC=0.516 hop=(0.05,850)
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+OOF ENET/hard085_only/eot1.0               eng=  1264 hin=   865 lhAUC=0.567 hop=(0.05,850)
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+OOF ENET/hard085_only/eot1.5               eng=  1285 hin=   857 lhAUC=0.540 hop=(0.05,850)
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+OOF ENET/hard085_only/eot2.5               eng=  1288 hin=   850 lhAUC=0.488 hop=(0.05,850)
+OOF L2/hard085_only/eot1.0                 eng=  1270 hin=   865 lhAUC=0.533 hop=(0.05,850)
+OOF L2/hard085_only/eot1.5                 eng=  1275 hin=   857 lhAUC=0.532 hop=(0.05,850)
+OOF L2/hard085_only/eot2.5                 eng=  1305 hin=   850 lhAUC=0.530 hop=(0.05,850)
+OOF ENET/hard08_soft/eot1.0                eng=  1239 hin=   865 lhAUC=0.533 hop=(0.05,850)
+OOF ENET/hard08_soft/eot1.5                eng=  1248 hin=   850 lhAUC=0.540 hop=(0.05,850)
+OOF ENET/hard08_soft/eot2.5                eng=  1258 hin=   850 lhAUC=0.543 hop=(0.05,850)
+OOF L2/hard08_soft/eot1.0                  eng=  1275 hin=   865 lhAUC=0.517 hop=(0.05,850)
+OOF L2/hard08_soft/eot1.5                  eng=  1275 hin=   850 lhAUC=0.527 hop=(0.05,850)
+OOF L2/hard08_soft/eot2.5                  eng=  1294 hin=   850 lhAUC=0.536 hop=(0.05,850)
+OOF ENET/tail_exp/eot1.0                   eng=  1180 hin=   857 lhAUC=0.493 hop=(0.05,850)
+OOF ENET/tail_exp/eot1.5                   eng=  1190 hin=   857 lhAUC=0.489 hop=(0.05,850)
+OOF ENET/tail_exp/eot2.5                   eng=  1201 hin=   850 lhAUC=0.479 hop=(0.05,850)
+OOF L2/tail_exp/eot1.0                     eng=  1230 hin=   857 lhAUC=0.472 hop=(0.05,850)
+OOF L2/tail_exp/eot1.5                     eng=  1192 hin=   857 lhAUC=0.472 hop=(0.05,850)
+OOF L2/tail_exp/eot2.5                     eng=  1240 hin=   850 lhAUC=0.473 hop=(0.05,850)
+
+=== ensembles (OOF) ===
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+OOF ens_hard_mix                           eng=  1201 hin=   850 lhAUC=0.491 hop=(0.05,850)
+OOF ens_dur_ladder                         eng=  1190 hin=   850 lhAUC=0.477 hop=(0.05,850)
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+OOF ens_hard_focus                         eng=  1271 hin=   850 lhAUC=0.539 hop=(0.05,850)
+
+=== Hindi calibration on baseline OOF ===
+OOF base+hin-isotonic                      eng=  1134 hin=   850 lhAUC=0.428 hop=(0.05,850)
+OOF base+hin-platt                         eng=  1134 hin=   850 lhAUC=0.449 hop=(0.05,850)
+OOF base+hin-rank                          eng=  1134 hin=   872 lhAUC=0.467 hop=(0.05,850)
+OOF base+hin-power                         eng=  1134 hin=   850 lhAUC=0.463 hop=(0.05,850)
+OOF base+temp0.5/pow0.5                    eng=  1134 hin=   850 lhAUC=0.463 hop=(0.05,850)
+
+=== calibrate best ens ens_hard_mix ===
+OOF ens+hin-isotonic                       eng=  1201 hin=   850 lhAUC=0.438 hop=(0.05,850)
+OOF ens+hin-platt                          eng=  1201 hin=   850 lhAUC=0.469 hop=(0.05,850)
+OOF ens+hin-power                          eng=  1201 hin=   850 lhAUC=0.491 hop=(0.05,850)
+OOF ens+temp0.5/pow0.5                     eng=  1201 hin=   850 lhAUC=0.491 hop=(0.05,850)
+
+=== TOP by Hindi OOF ===
+  kind                 name    eng   hin    lhAUC
+single    ENET/dur05/eot1.5 1134.5 850.0 0.463333
+   cal        base+isotonic 1134.5 850.0 0.427778
+   cal           base+platt 1134.5 850.0 0.448889
+   cal           base+power 1134.5 850.0 0.463333
+   cal       temp0.5_pow0.5 1134.5 850.0 0.463333
+single      L2/dur05/eot2.5 1180.0 850.0 0.458889
+single   ENET/hard07/eot1.5 1182.0 850.0 0.512222
+single    ENET/dur10/eot2.5 1190.0 850.0 0.470000
+   ens       ens_dur_ladder 1190.0 850.0 0.476667
+single     L2/hard07/eot1.5 1195.0 850.0 0.507778
+single      L2/dur05/eot1.5 1200.0 850.0 0.456667
+single    ENET/dur10/eot1.5 1200.0 850.0 0.472222
+single    ENET/dur20/eot2.5 1200.0 850.0 0.507778
+single     L2/hard08/eot1.5 1201.0 850.0 0.491111
+single ENET/tail_exp/eot2.5 1201.0 850.0 0.478889
+
+Best hin OOF: 850 (1)

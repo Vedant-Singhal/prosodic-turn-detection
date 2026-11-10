@@ -1,0 +1,135 @@
+FEATURE_NAMES=61
+building features for english (61-D)...
+building features for hindi (61-D)...
+eng=(248, 61) hin=(248, 61)
+  uni e_fade_200             eot-vs-lh AUC=0.709
+  uni pause_index            eot-vs-lh AUC=0.307
+  uni rel_e_drop             eot-vs-lh AUC=0.544
+  uni ix_x_edrop             eot-vs-lh AUC=0.296
+  uni mfcc1_mean_500         eot-vs-lh AUC=0.488
+  uni prior_pause_max_dur    eot-vs-lh AUC=0.364
+  uni n_prior_pauses         eot-vs-lh AUC=0.307
+
+=== joint models ===
+joint ENET/dur05                             eng=  1239 hin=   857 lhAUC=0.449 hop=(0.05,850)
+joint L2/dur05                               eng=  1267 hin=   857 lhAUC=0.439 hop=(0.05,850)
+joint ENET/hard08                            eng=  1182 hin=   857 lhAUC=0.489 hop=(0.05,850)
+joint L2/hard08                              eng=  1182 hin=   857 lhAUC=0.477 hop=(0.05,850)
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+joint ENET/hard08_soft                       eng=  1217 hin=   865 lhAUC=0.558 hop=(0.05,850)
+joint L2/hard08_soft                         eng=  1260 hin=   865 lhAUC=0.526 hop=(0.05,850)
+joint ENET/hard07                            eng=  1163 hin=   857 lhAUC=0.489 hop=(0.05,850)
+joint L2/hard07                              eng=  1222 hin=   857 lhAUC=0.483 hop=(0.05,850)
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+joint ENET/pairlike                          eng=  1246 hin=   872 lhAUC=0.612 hop=(0.05,850)
+joint L2/pairlike                            eng=  1252 hin=   865 lhAUC=0.592 hop=(0.05,850)
+
+=== Hindi-only models (Eng kept as joint dur05) ===
+hinOnly ENET/dur05                           eng=  1239 hin=   872 lhAUC=0.533 hop=(0.05,850)
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+hinOnly ENET/hard08                          eng=  1239 hin=   872 lhAUC=0.552 hop=(0.05,850)
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+hinOnly ENET/hard08_soft                     eng=  1239 hin=   872 lhAUC=0.579 hop=(0.05,850)
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+hinOnly ENET/pairlike                        eng=  1239 hin=   857 lhAUC=0.563 hop=(0.05,850)
+
+=== pairwise ranking ===
+pair thr0.75/C0.5                            eng=  1305 hin=   917 lhAUC=0.581 hop=(0.05,850)
+pair thr0.8/C0.5                             eng=  1295 hin=   970 lhAUC=0.541 hop=(0.05,850)
+pair thr0.7/C0.25                            eng=  1270 hin=   910 lhAUC=0.546 hop=(0.05,850)
+pair thr0.75/C1.0                            eng=  1305 hin=   925 lhAUC=0.576 hop=(0.05,850)
+pair hinOnly thr0.75                         eng=  1239 hin=   910 lhAUC=0.549 hop=(0.05,850)
+
+=== blends ===
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+blend base+hard                              eng=  1163 hin=   857 lhAUC=0.494 hop=(0.05,850)
+blend base+pair                              eng=  1239 hin=   857 lhAUC=0.523 hop=(0.05,850)
+blend hard+pair                              eng=  1307 hin=   865 lhAUC=0.562 hop=(0.05,850)
+blend 3way                                   eng=  1277 hin=   857 lhAUC=0.526 hop=(0.05,850)
+blend base+hinHard                           eng=  1239 hin=   857 lhAUC=0.564 hop=(0.05,850)
+blend pair+hinHard                           eng=  1239 hin=   857 lhAUC=0.587 hop=(0.05,850)
+
+=== feature ablations ===
+ablate 43f hard08_soft                       eng=  1248 hin=   850 lhAUC=0.540 hop=(0.05,850)
+ablate 43f dur05                             eng=  1134 hin=   850 lhAUC=0.463 hop=(0.05,850)
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+ablate 43+mfcc hard08_soft                   eng=  1265 hin=   857 lhAUC=0.558 hop=(0.05,850)
+ablate 43+mfcc dur05                         eng=  1116 hin=   850 lhAUC=0.494 hop=(0.05,850)
+ablate 43+hist hard08_soft                   eng=  1229 hin=   850 lhAUC=0.516 hop=(0.05,850)
+ablate 43+hist dur05                         eng=  1220 hin=   857 lhAUC=0.432 hop=(0.05,850)
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+ablate 61f hard08_soft                       eng=  1235 hin=   865 lhAUC=0.538 hop=(0.05,850)
+ablate 61f dur05                             eng=  1239 hin=   857 lhAUC=0.449 hop=(0.05,850)
+
+=== TOP by Hindi OOF ===
+                      name    eng   hin    lhAUC   th  delay
+      ablate 43+mfcc dur05 1115.5 850.0 0.494444 0.05   0.85
+          ablate 43f dur05 1134.5 850.0 0.463333 0.05   0.85
+ablate 43+hist hard08_soft 1229.5 850.0 0.515556 0.05   0.85
+    ablate 43f hard08_soft 1248.5 850.0 0.540000 0.05   0.85
+         joint ENET/hard07 1163.0 857.5 0.488889 0.05   0.85
+           blend base+hard 1163.0 857.5 0.494444 0.05   0.85
+         joint ENET/hard08 1182.0 857.5 0.488889 0.05   0.85
+           joint L2/hard08 1182.0 857.5 0.476667 0.05   0.85
+      ablate 43+hist dur05 1220.5 857.5 0.432222 0.05   0.85
+           joint L2/hard07 1222.0 857.5 0.483333 0.05   0.85
+          joint ENET/dur05 1239.0 857.5 0.448889 0.05   0.85
+     hinOnly ENET/pairlike 1239.0 857.5 0.563333 0.05   0.85
+           blend base+pair 1239.0 857.5 0.523333 0.05   0.85
+        blend base+hinHard 1239.0 857.5 0.564444 0.05   0.85
+        blend pair+hinHard 1239.0 857.5 0.586667 0.05   0.85
+          ablate 61f dur05 1239.0 857.5 0.448889 0.05   0.85
+ablate 43+mfcc hard08_soft 1265.0 857.5 0.557778 0.05   0.85
+            joint L2/dur05 1267.5 857.5 0.438889 0.05   0.85
+                blend 3way 1277.5 857.5 0.525556 0.05   0.85
+    joint ENET/hard08_soft 1217.5 865.0 0.557778 0.05   0.85
+
+Runs beating 850: 0

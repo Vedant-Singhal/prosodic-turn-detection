@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>End-of-Turn Detection — Solution Summary</title>
+<style>
+:root{
+  --ground:#f6f8f9; --panel:#ffffff; --ink:#151a20; --muted:#5c6772;
+  --line:#e3e8ec; --grid:#eef2f4;
+  --accent:#0e7c86;        /* signal teal */
+  --accent-soft:#0e7c8622;
+  --warn:#c2410c;          /* the wall / failure */
+  --warn-soft:#c2410c1f;
+  --eot:#0e7c86; --hold:#94a3b8;
+  --mono:ui-monospace,"Cascadia Code","SF Mono",Menlo,Consolas,monospace;
+  --sans:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0d1117; --panel:#161b22; --ink:#e6edf3; --muted:#8b95a1;
+    --line:#232a33; --grid:#1c232c;
+    --accent:#2dd4bf; --accent-soft:#2dd4bf22;
+    --warn:#fb923c; --warn-soft:#fb923c22;
+    --eot:#2dd4bf; --hold:#64748b;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0d1117; --panel:#161b22; --ink:#e6edf3; --muted:#8b95a1;
+  --line:#232a33; --grid:#1c232c;
+  --accent:#2dd4bf; --accent-soft:#2dd4bf22; --warn:#fb923c; --warn-soft:#fb923c22;
+  --eot:#2dd4bf; --hold:#64748b;
+}
+:root[data-theme="light"]{
+  --ground:#f6f8f9; --panel:#ffffff; --ink:#151a20; --muted:#5c6772;
+  --line:#e3e8ec; --grid:#eef2f4; --accent:#0e7c86; --accent-soft:#0e7c8622;
+  --warn:#c2410c; --warn-soft:#c2410c1f; --eot:#0e7c86; --hold:#94a3b8;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--sans); line-height:1.6; font-size:16px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:920px; margin:0 auto; padding:clamp(20px,5vw,64px) clamp(18px,4vw,40px)}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 10px}
+h1{font-size:clamp(28px,5vw,44px); line-height:1.1; letter-spacing:-.02em; margin:0 0 14px; text-wrap:balance; font-weight:700}
+h2{font-size:clamp(20px,3vw,26px); letter-spacing:-.01em; margin:0 0 8px; text-wrap:balance}
+h3{font-size:17px; margin:22px 0 6px}
+p{margin:0 0 14px; max-width:68ch}
+a{color:var(--accent)}
+.lede{font-size:clamp(17px,2.2vw,20px); color:var(--ink); max-width:64ch}
+.muted{color:var(--muted)}
+header{border-bottom:1px solid var(--line); padding-bottom:26px; margin-bottom:8px}
+section{padding:30px 0; border-bottom:1px solid var(--line)}
+section:last-child{border-bottom:0}
+code,.k{font-family:var(--mono); font-size:.9em}
+.k{background:var(--accent-soft); color:var(--accent); padding:1px 6px; border-radius:4px; font-size:.82em}
+/* scoreboard */
+.scores{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin:22px 0 6px}
+.tile{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 18px 16px; position:relative; overflow:hidden}
+.tile .lang{font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted)}
+.tile .big{font-size:38px; font-weight:700; letter-spacing:-.02em; font-variant-numeric:tabular-nums; margin-top:6px; line-height:1}
+.tile .big .unit{font-size:16px; color:var(--muted); font-weight:500}
+.tile .delta{display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:13px; margin-top:10px; padding:2px 8px; border-radius:20px}
+.delta.win{background:var(--accent-soft); color:var(--accent)}
+.delta.flat{background:var(--warn-soft); color:var(--warn)}
+.tile .base{font-family:var(--mono); font-size:12px; color:var(--muted); margin-top:8px}
+.stripe{position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--accent)}
+.stripe.warn{background:var(--warn)}
+/* panels & charts */
+.panel{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:20px; margin:18px 0}
+.panel h3{margin-top:0}
+.cap{font-size:13.5px; color:var(--muted); margin:10px 0 0; max-width:70ch}
+figure{margin:0}
+svg{display:block; width:100%; height:auto; overflow:visible}
+.legend{display:flex; flex-wrap:wrap; gap:16px; font-family:var(--mono); font-size:12px; color:var(--muted); margin-top:12px}
+.legend span{display:inline-flex; align-items:center; gap:7px}
+.dot{width:11px; height:11px; border-radius:3px; display:inline-block}
+/* table */
+.tbl-wrap{overflow-x:auto; margin:16px 0}
+table{border-collapse:collapse; width:100%; font-size:14.5px; min-width:520px}
+th,td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--line)}
+th{font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); font-weight:600}
+td.num,th.num{text-align:right; font-variant-numeric:tabular-nums; font-family:var(--mono)}
+tr .win{color:var(--accent); font-weight:600}
+/* two-col */
+.cols{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+@media (max-width:680px){.cols{grid-template-columns:1fr}}
+.callout{border-left:3px solid var(--warn); background:var(--warn-soft); padding:14px 18px; border-radius:0 10px 10px 0; margin:16px 0}
+.callout.good{border-color:var(--accent); background:var(--accent-soft)}
+.callout p{margin:0; max-width:none}
+ul.tight{margin:6px 0 14px; padding-left:20px} ul.tight li{margin:5px 0; max-width:66ch}
+.split{display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--line); border-radius:12px; overflow:hidden}
+@media (max-width:680px){.split{grid-template-columns:1fr}}
+.split > div{padding:20px}
+.split .agent{background:var(--panel)}
+.split .human{background:var(--accent-soft)}
+.split h3{margin-top:0; display:flex; align-items:center; gap:8px}
+pre{font-family:var(--mono); font-size:13px; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px 16px; overflow-x:auto; line-height:1.5}
+.files{font-family:var(--mono); font-size:13.5px}
+.files div{padding:6px 0; border-bottom:1px dashed var(--line); display:flex; gap:12px}
+.files b{color:var(--accent); font-weight:600; min-width:170px; display:inline-block}
+footer{padding:26px 0 10px; color:var(--muted); font-size:13px; font-family:var(--mono)}
+.toggle{position:fixed; top:14px; right:14px; font-family:var(--mono); font-size:12px; background:var(--panel); border:1px solid var(--line); color:var(--muted); border-radius:20px; padding:6px 12px; cursor:pointer}
+@media print{.toggle{display:none}}
+</style>
+</head>
+<body>
+<button class="toggle" id="tg" aria-label="Toggle light or dark theme">◐ theme</button>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Voice-AI · Prosody · 120-min build</p>
+  <h1>Predicting the end of a human turn, from sound alone</h1>
+  <p class="lede">A from-scratch model that scores every conversational pause with <span class="k">p_eot</span> — the probability the speaker is <em>done</em>, not just breathing — from audio before the pause only. No ASR, no pretrained weights, CPU only.</p>
+</header>
+
+<section id="result">
+  <p class="eyebrow">The result</p>
+  <h2>English endpointing is <span style="color:var(--accent)">37% faster</span>; Hindi beats silence in-sample</h2>
+  <p>The scorer simulates a live agent: <strong>mean response delay at ≤5% interrupted turns</strong>, lower is better. The status quo is a blind silence timer — wait a fixed gap after every pause, then assume the user is done; it pays the full <strong>1600 ms</strong> on English. Ours reads prosody and acoustic-completion and commits early when the voice has actually finished, at the same interruption budget. Model selection used a <strong>Hindi-priority</strong> score because the hidden test is mostly Hindi.</p>
+
+  <div class="scores">
+    <div class="tile">
+      <div class="stripe"></div>
+      <div class="lang">English · response delay</div>
+      <div class="big">1015<span class="unit"> ms</span></div>
+      <div class="delta win">▼ 585 ms vs baseline</div>
+      <div class="base">silence-only baseline: 1600 ms · honest OOF CV 1248 ms</div>
+    </div>
+    <div class="tile">
+      <div class="stripe"></div>
+      <div class="lang">Hindi · response delay</div>
+      <div class="big">831<span class="unit"> ms</span></div>
+      <div class="delta win">▼ 19 ms vs silence (in-sample)</div>
+      <div class="base">silence-only baseline: 850 ms · honest OOF CV still 850 ms</div>
+    </div>
+  </div>
+  <figure class="panel">
+    <h3>Response delay vs the silence-only baseline</h3>
+    <div id="c_bars"></div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--hold)"></i>silence-only baseline</span>
+      <span><i class="dot" style="background:var(--accent)"></i>our model (official score.py)</span>
+      <span><i class="dot" style="background:var(--muted)"></i>cross-validated estimate</span>
+    </div>
+    <p class="cap">Bars are the official <code>score.py</code> number on the delivered predictions. The dashed tick is the honest GroupKFold OOF estimate — Hindi’s in-sample win does not fully generalise fold-to-fold, and we report both.</p>
+  </figure>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Configuration</th><th class="num">English</th><th class="num">Hindi</th><th>Evaluation</th></tr></thead>
+    <tbody>
+      <tr><td>Silence-only baseline</td><td class="num">1600</td><td class="num">850</td><td class="muted">official score.py</td></tr>
+      <tr><td>Elastic-Net + AC + hard-neg (shipped)</td><td class="num win">1015</td><td class="num win">831</td><td class="muted">official score.py, in-sample</td></tr>
+      <tr><td>Same — generalisation</td><td class="num">1248</td><td class="num">850</td><td class="muted">grouped 5-fold OOF CV</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="problem">
+  <p class="eyebrow">The problem &amp; the data</p>
+  <h2>One user turn, several pauses, exactly one true ending</h2>
+  <p>Each WAV is one real user turn from a phone conversation (restaurant bookings, appointments, orders), 16 kHz mono. Every silence ≥100 ms is labelled <span class="k">hold</span> (user continues) or <span class="k">eot</span> (turn is over). We have <strong>100 turns per language, 248 pauses each</strong>, with exactly one <span class="k">eot</span> — the final pause — per turn.</p>
+  <div class="callout">
+    <p><strong>Hard causality rule.</strong> For a pause at <code>pause_start</code>, features may use <em>only</em> audio in <code>[0, pause_start)</code>. The pause's own length is future information (a live agent cannot hear the future) and is <strong>never</strong> used as a feature. Our feature code enforces this frame-by-frame.</p>
+  </div>
+  <h3>The one insight that shaped every decision</h3>
+  <p>The scorer only records a false cutoff when <code>delay &lt; dur</code> — i.e. the agent speaks <em>before</em> the user resumes. So <strong>short holds are free</strong>: the user comes back before the agent acts. The model's real job is not to separate eots from <em>all</em> holds, but to rank true endings above the <strong>long</strong> hold pauses. We therefore optimise the official metric directly — optimising raw AUC actively hurt the score (see run&nbsp;#4 in the runlog).</p>
+</section>
+
+<section id="method">
+  <p class="eyebrow">How it works</p>
+  <h2>43 causal features → Elastic-Net + hard-neg (mid-complexity)</h2>
+  <p>Turn-endings share cross-linguistic prosody: pitch falls or rises while hesitations stay <em>level</em>; loudness fades; the final syllable lengthens; the voice goes creaky. The last speech before each pause becomes 39 prosodic summaries plus 4 <strong>acoustic-completion</strong> proxies (how surprising the final frames are under a tiny AR(2) fit) — a legal stand-in for “is this phrase finished?” without ASR. Everything is speaker-normalised from the turn so far.</p>
+  <div class="cols">
+    <div class="panel">
+      <h3>Signal extraction (once per turn)</h3>
+      <ul class="tight">
+        <li>Custom vectorised <strong>normalised-cross-correlation F0 tracker</strong> (octave-corrected, median-smoothed) — no pretrained pitch model</li>
+        <li>Short-time energy (dB), spectral centroid, zero-crossing rate, spectral tilt</li>
+        <li>Frames used only if they <em>end</em> at/before <code>pause_start</code> — causality by construction</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Feature families</h3>
+      <ul class="tight">
+        <li><strong>Pitch / energy / rhythm</strong> — final level &amp; slope, fade, lengthening, creak, tilt</li>
+        <li><strong>Causal context</strong> — pauses so far, prior-pause durations</li>
+        <li><strong>Acoustic completion</strong> — AR residual RMSE &amp; contour curl on terminal energy/F0 (human-requested after Hindi listen)</li>
+      </ul>
+    </div>
+  </div>
+
+  <figure class="panel">
+    <h3>Which single features carry signal</h3>
+    <div id="c_uni"></div>
+    <p class="cap">Univariate AUC of each feature vs 0.5. Teal = higher value signals <span style="color:var(--accent)">end-of-turn</span>, grey = signals <span style="color:var(--muted)">hold</span>. Every feature is individually weak — the model's value is in combining them.</p>
+  </figure>
+
+  <figure class="panel">
+    <h3>What the trained logistic model leans on</h3>
+    <div id="c_coef"></div>
+    <p class="cap">Standardised logistic-regression weights (top 10 by magnitude). Final energy drop/level, final pitch relative to the speaker's pitch floor, and terminal voicing dominate — an energy-and-pitch "winding-down" signature.</p>
+  </figure>
+
+  <h3>Model &amp; training choices (human overruled plain L2-LR)</h3>
+  <ul class="tight">
+    <li><strong>Bake-off across mid-complexity models.</strong> Elastic-Net, linear SVM + Platt, LDA/QDA, RBF-SVM, small MLPs, and depth-2 HistGB were compared on the official metric with grouped CV. Kernels and nets raised English delay without beating Hindi’s 850 ms floor until hard-neg reweighting.</li>
+    <li><strong>Winner: Elastic-Net logistic (C=0.5, l1_ratio=0.5)</strong> with <strong>hard-negative weights on holds whose duration &gt;0.8 s (×12)</strong> plus milder duration weighting on shorter holds — sparse enough to ignore weak features, expressive enough to demote the dangerous long holds. Selected by Hindi-priority <code>(eng+2·hin)/3</code>.</li>
+    <li><strong>One multilingual model.</strong> English+Hindi training improves English and keeps predict.py ready for an unseen folder. <code>dur</code> is a training weight only — never an inference feature.</li>
+  </ul>
+</section>
+
+<section id="finding">
+  <p class="eyebrow">The honest finding</p>
+  <h2>Why Hindi’s long holds still pin honest OOF at 850</h2>
+  <p>The metric only cares about separating eots from <em>long</em> holds. So we measured exactly that: AUC of true endings versus holds longer than a growing duration threshold. Hard-neg reweighting unlocked an in-sample Hindi win (831 ms); honest OOF Hindi remains at the silence floor.</p>
+  <figure class="panel">
+    <h3>Separation of eots vs holds longer than X seconds</h3>
+    <div id="c_dur"></div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--accent)"></i>English</span>
+      <span><i class="dot" style="background:var(--warn)"></i>Hindi</span>
+      <span><i class="dot" style="background:var(--muted)"></i>chance (0.5)</span>
+    </div>
+    <p class="cap">English stays comfortably above chance for every hold length — its long holds are still distinguishable, so the agent can fire early. Hindi <strong>falls below 0.5</strong> for holds &gt;0.8 s: the ~9 longest Hindi holds are ranked <em>more</em> turn-final than the real endings.</p>
+  </figure>
+  <div class="callout">
+    <p><strong>Human listening notes (longest Hindi holds).</strong> On hi__029#2 (1.5 s), hi__051#1 (1.4 s), hi__097#4 (1.0 s) and neighbours, the pre-pause speech shows deep final F0 falls (−3 to −4 st) and large energy drops — they <em>sound finished</em>. True EOTs are a mixed bag: some fall hard, some stay level, some cut off quietly. Ranking by prosody alone therefore puts the dangerous holds at the top of the “fire early” list. Telling “trailing off to think” from “trailing off because done” needs the <strong>words</strong>; ASR is banned.</p>
+    <p><strong>Audit of the “always 850” anomaly.</strong> After the human flagged that Hindi never left 850 ms, we re-ran official <code>score.py</code> on adversarial prediction files: oracle → 100 ms, never-fire → 1600 ms, silence → 850 ms. The scorer and CSV path are fine; 850 was the silence-grid floor plus a ranking that could not safely take any shorter delay. A counterfactual pinned the bottleneck precisely: <strong>zeroing just the 5 hold scores with dur&gt;0.85 s drops the official score to 736 ms</strong> — the ceiling is the model’s ranking of those 5 pauses, nothing else. <strong>Hard-neg reweighting of holds &gt;0.8 s (×12) then unlocked in-sample Hindi 831 ms</strong> (op point th=0.5 / delay=650 ms); honest GroupKFold OOF Hindi remains <strong>850 ms</strong>.</p>
+  </div>
+  <figure class="panel">
+    <h3>Predicted p_eot — true endings vs holds</h3>
+    <div class="cols">
+      <div><div id="c_hist_e"></div><p class="cap" style="text-align:center">English</p></div>
+      <div><div id="c_hist_h"></div><p class="cap" style="text-align:center">Hindi</p></div>
+    </div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--eot)"></i>eot (true endings)</span>
+      <span><i class="dot" style="background:var(--hold)"></i>hold</span>
+    </div>
+    <p class="cap">Out-of-fold predictions. English separates more cleanly at the high end (where firing happens); Hindi's distributions overlap heavily.</p>
+  </figure>
+</section>
+
+<section id="who">
+  <p class="eyebrow">Human ↔ coding agent</p>
+  <h2>Who did what</h2>
+  <p>The agent shipped a solid L2-LR baseline; every gain past it came from human steering.</p>
+  <div class="split">
+    <div class="agent">
+      <h3>🤖 Coding agent</h3>
+      <ul class="tight">
+        <li>Built the causal feature pipeline &amp; custom NCC pitch tracker</li>
+        <li>Engineered the first 39 prosodic features (rounds 1–5)</li>
+        <li>Grouped-CV harness on the official metric; caught AUC ≠ objective</li>
+        <li>Duration-aware L2-LR baseline and initial deliverables scaffold</li>
+      </ul>
+    </div>
+    <div class="human">
+      <h3>🧑 Human (steering + diagnosis)</h3>
+      <ul class="tight">
+        <li><strong>Priority call:</strong> hidden tests are mostly Hindi — select models by Hindi-priority, not English vanity</li>
+        <li><strong>Listen pass:</strong> audited the ~9 longest Hindi holds; wrote qualitative notes (deep falls that look “done”)</li>
+        <li><strong>Overruled plain L2-LR:</strong> demanded a mid-complexity bake-off (Elastic-Net / SVM / RBF / MLP / light GB)</li>
+        <li><strong>Feature push:</strong> required acoustic-completion proxies after the wall diagnosis</li>
+        <li><strong>850 audit:</strong> forced adversarial score.py checks (oracle / never-fire / silence) to prove the floor was real, not a pipeline bug</li>
+        <li><strong>Hard-neg push:</strong> demanded reweighting of holds &gt;0.8 s — unlocked in-sample Hindi 831 ms (OOF Hindi still 850)</li>
+        <li><strong>Rejected</strong> kernel/MLP winners of AUC that worsened the official delay</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="docs">
+  <p class="eyebrow">Deliverables &amp; how to reproduce</p>
+  <h2>The files, and the commands</h2>
+  <div class="files panel">
+    <div><b>predict.py</b><span>loads the saved model; <code>python predict.py --data_dir &lt;folder&gt; --out predictions.csv</code></span></div>
+    <div><b>predictions_*.csv</b><span>scores for both provided language folders (<code>turn_id, pause_index, p_eot</code>)</span></div>
+    <div><b>RUNLOG.md</b><span>every scoring run with what changed and why (rounds 0–10 + bake-off; #10 = hard-neg ship)</span></div>
+    <div><b>NOTES.md</b><span>≤10-sentence summary — signal used, where it fails, one more day</span></div>
+    <div><b>SUMMARY.html</b><span>this document</span></div>
+    <div><b>eot_features.py</b><span>causal feature extractor incl. acoustic-completion (grader reads this)</span></div>
+    <div><b>train_model.py</b><span>Hindi-priority Elastic-Net + hard-neg fit + saves <code>eot_model.pkl</code></span></div>
+    <div><b>experiments/</b><span>full research trail — bake-off, GRU, listen pass, 850-audit scripts + raw logs, indexed in its README</span></div>
+  </div>
+  <pre>python train_model.py                                   # fit + save eot_model.pkl
+python predict.py --data_dir eot_data/english --out predictions_english.csv
+python score.py   --data_dir eot_data/english --pred predictions_english.csv</pre>
+  <p class="muted" style="font-size:14px">Constraints honoured: CPU only · numpy / scipy / scikit-learn / pandas / librosa / PyTorch only · no pretrained models or downloaded weights · no external data.</p>
+</section>
+
+<footer>
+  End-of-Turn Detection · Elastic-Net + AC + hard-neg · English 1600→1015 ms, Hindi 850→831 ms (OOF 1248 / 850) at ≤5% interruptions.
+</footer>
+
+</div>
+
+<script>
+const M={
+ baseline:{english:1600,hindi:850}, model:{english:1015,hindi:831}, cv:{english:1248,hindi:850},
+ univariate:[["f0_end_st",0.404],["voiced_frac_final",0.406],["f0_end_vs_p10",0.409],["cent_slope_final",0.410],
+  ["speech_rate_final",0.590],["tilt_slope_final",0.589],["cent_end",0.415],["zcr_end",0.418],
+  ["f0_end_vs_p90",0.421],["f0_min_final_st",0.422],["f0_slope_400",0.422],["e_slope_300",0.578],["pause_index",0.577]],
+ coef:[["e_drop_final",-0.94],["f0_end_vs_p10",-0.59],["e_end_rel_mean",-0.56],["voiced_frac_final",-0.55],
+  ["energy_trend_turn",0.48],["pause_index",0.44],["e_end_rel_max",-0.37],["e_end",-0.34],["cent_end",-0.32],["f0_delta_end",0.28]],
+ dur:{english:[[0,0.676],[0.4,0.693],[0.5,0.713],[0.6,0.711],[0.7,0.733],[0.8,0.699],[1.0,0.616]],
+      hindi:[[0,0.660],[0.4,0.660],[0.5,0.606],[0.6,0.574],[0.7,0.542],[0.8,0.451],[1.0,0.420]]},
+ hist:{edges:[0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1],
+   english:{eot:[1,4,9,13,9,17,16,13,13,5],hold:[7,16,28,27,16,20,15,7,9,3]},
+   hindi:{eot:[3,2,8,11,12,12,16,18,13,5],hold:[0,13,21,24,32,21,16,12,5,4]}}
+};
+const NS="http://www.w3.org/2000/svg";
+const V=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function E(t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;}
+function txt(x,y,s,o={}){const e=E("text",Object.assign({x,y,fill:o.fill||"var(--muted)","font-size":o.fs||12,
+  "font-family":"var(--mono)","text-anchor":o.anchor||"start"},o.extra||{}));e.textContent=s;return e;}
+function mk(host,w,h){const s=E("svg",{viewBox:`0 0 ${w} ${h}`,width:"100%"});document.getElementById(host).appendChild(s);return s;}
+
+/* results bars */
+(function(){const w=760,h=250,pl=54,pr=20,pt=16,pb=42,langs=["english","hindi"];
+ const s=mk("c_bars",w,h);const max=1700,gh=h-pt-pb;
+ const Y=v=>pt+gh*(1-v/max);
+ for(let g=0;g<=1700;g+=340){s.appendChild(E("line",{x1:pl,y1:Y(g),x2:w-pr,y2:Y(g),stroke:"var(--grid)"}));
+   s.appendChild(txt(pl-8,Y(g)+4,g,{anchor:"end"}));}
+ const groupW=(w-pl-pr)/langs.length;
+ langs.forEach((L,i)=>{const cx=pl+groupW*i+groupW/2;const bw=54;
+   const items=[["baseline",M.baseline[L],"var(--hold)"],["model",M.model[L],"var(--accent)"]];
+   items.forEach((it,j)=>{const x=cx-bw-6+j*(bw+12);
+     s.appendChild(E("rect",{x,y:Y(it[1]),width:bw,height:pt+gh-Y(it[1]),rx:5,fill:it[2]}));
+     s.appendChild(txt(x+bw/2,Y(it[1])-7,it[1],{anchor:"middle",fill:"var(--ink)",fs:13}));});
+   // cv tick on model bar
+   const mx=cx+6, cvY=Y(M.cv[L]);
+   s.appendChild(E("line",{x1:mx-4,y1:cvY,x2:mx+bw+4,y2:cvY,stroke:"var(--muted)","stroke-width":2,"stroke-dasharray":"4 3"}));
+   s.appendChild(txt(cx,h-pb+26,L.toUpperCase(),{anchor:"middle",fs:12,fill:"var(--ink)"}));});
+ s.appendChild(txt(14,pt+8,"ms",{fs:11}));
+})();
+
+/* diverging univariate around 0.5 */
+function diverge(host,data,center,scale,fmt){
+ const rowH=26,w=760,pt=8,pb=8,labelW=150,h=pt+pb+data.length*rowH;
+ const s=mk(host,w,h);const midX=labelW+(w-labelW-30)/2;const half=(w-labelW-30)/2;
+ s.appendChild(E("line",{x1:midX,y1:pt-2,x2:midX,y2:h-pb,stroke:"var(--line)"}));
+ s.appendChild(txt(midX,h-1,fmt(center),{anchor:"middle",fs:10}));
+ data.forEach((d,i)=>{const y=pt+i*rowH+rowH/2;const val=d[1]-center;const len=Math.max(-half,Math.min(half,val*scale));
+  const pos=len>=0;const col=pos?"var(--accent)":"var(--hold)";
+  s.appendChild(txt(labelW-8,y+4,d[0],{anchor:"end",fill:"var(--ink)",fs:12.5}));
+  s.appendChild(E("rect",{x:pos?midX:midX+len,y:y-8,width:Math.abs(len),height:16,rx:3,fill:col}));
+  s.appendChild(txt(pos?midX+len+6:midX+len-6,y+4,fmt(d[1]),{anchor:pos?"start":"end",fs:11,fill:"var(--muted)"}));});
+}
+diverge("c_uni",M.univariate,0.5,760,v=>v.toFixed(3));
+
+/* coefficients diverging around 0 */
+(function(){const data=M.coef,rowH=26,w=760,pt=8,pb=16,labelW=150,h=pt+pb+data.length*rowH;
+ const s=mk("c_coef",w,h);const midX=labelW+(w-labelW-40)/2;const half=(w-labelW-40)/2;const mx=1.0;
+ s.appendChild(E("line",{x1:midX,y1:pt-2,x2:midX,y2:h-pb,stroke:"var(--line)"}));
+ s.appendChild(txt(midX,h-2,"0",{anchor:"middle",fs:10}));
+ s.appendChild(txt(labelW,h-2,"↤ signals hold",{anchor:"start",fs:10}));
+ s.appendChild(txt(w-8,h-2,"signals eot ↦",{anchor:"end",fs:10}));
+ data.forEach((d,i)=>{const y=pt+i*rowH+rowH/2;const len=(d[1]/mx)*half;const pos=len>=0;
+  s.appendChild(txt(labelW-8,y+4,d[0],{anchor:"end",fill:"var(--ink)",fs:12.5}));
+  s.appendChild(E("rect",{x:pos?midX:midX+len,y:y-8,width:Math.abs(len),height:16,rx:3,fill:pos?"var(--accent)":"var(--hold)"}));});
+})();
+
+/* dur-restricted line chart */
+(function(){const w=760,h=300,pl=48,pr=20,pt=18,pb=44;const s=mk("c_dur",w,h);
+ const xs=M.dur.english.map(d=>d[0]);const gw=w-pl-pr,gh=h-pt-pb;
+ const X=v=>pl+gw*(v/1.0),Y=v=>pt+gh*(1-(v-0.4)/(0.75-0.4));
+ [0.4,0.5,0.6,0.7].forEach(g=>{s.appendChild(E("line",{x1:pl,y1:Y(g),x2:w-pr,y2:Y(g),stroke:"var(--grid)"}));
+   s.appendChild(txt(pl-8,Y(g)+4,g.toFixed(2),{anchor:"end"}));});
+ // chance line at .5 emphasised
+ s.appendChild(E("line",{x1:pl,y1:Y(0.5),x2:w-pr,y2:Y(0.5),stroke:"var(--muted)","stroke-dasharray":"5 4"}));
+ xs.forEach(v=>s.appendChild(txt(X(v),h-pb+22,v,{anchor:"middle"})));
+ s.appendChild(txt((pl+w-pr)/2,h-6,"minimum hold duration included (s)",{anchor:"middle",fs:11}));
+ function line(series,col){let path="";series.forEach((d,i)=>{path+=(i?"L":"M")+X(d[0])+" "+Y(d[1]);});
+   s.appendChild(E("path",{d:path,fill:"none",stroke:col,"stroke-width":2.5,"stroke-linejoin":"round"}));
+   series.forEach(d=>s.appendChild(E("circle",{cx:X(d[0]),cy:Y(d[1]),r:3.5,fill:col})));}
+ line(M.dur.english,"var(--accent)");line(M.dur.hindi,"var(--warn)");
+ // annotate hindi below-chance point
+ const hp=M.dur.hindi[5];s.appendChild(txt(X(hp[0]),Y(hp[1])+20,"below chance",{anchor:"middle",fs:10.5,fill:"var(--warn)"}));
+})();
+
+/* grouped histogram */
+function histChart(host,data){const w=370,h=210,pl=30,pr=8,pt=12,pb=30;const s=mk(host,w,h);
+ const n=data.eot.length,gw=w-pl-pr,gh=h-pt-pb,bw=gw/n;
+ const max=Math.max(...data.eot,...data.hold);
+ const Y=v=>pt+gh*(1-v/max);
+ for(let g=0;g<=max;g+=Math.ceil(max/3)){s.appendChild(E("line",{x1:pl,y1:Y(g),x2:w-pr,y2:Y(g),stroke:"var(--grid)"}));
+   s.appendChild(txt(pl-6,Y(g)+4,g,{anchor:"end",fs:10}));}
+ for(let i=0;i<n;i++){const x=pl+i*bw;const sw=bw*0.4;
+   s.appendChild(E("rect",{x:x+bw*0.08,y:Y(data.hold[i]),width:sw,height:pt+gh-Y(data.hold[i]),fill:"var(--hold)",rx:1.5}));
+   s.appendChild(E("rect",{x:x+bw*0.52,y:Y(data.eot[i]),width:sw,height:pt+gh-Y(data.eot[i]),fill:"var(--eot)",rx:1.5}));}
+ s.appendChild(txt(pl,h-8,"0",{fs:10}));s.appendChild(txt(w-pr,h-8,"p_eot →",{anchor:"end",fs:10}));
+}
+histChart("c_hist_e",M.hist.english);histChart("c_hist_h",M.hist.hindi);
+
+/* theme toggle */
+document.getElementById("tg").addEventListener("click",()=>{
+ const r=document.documentElement;const cur=r.getAttribute("data-theme")||
+   (matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
+ r.setAttribute("data-theme",cur==="dark"?"light":"dark");
+});
+</script>
+</body>
+</html>

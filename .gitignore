@@ -1,0 +1,16 @@
+# Provided assignment materials & data (not ours to redistribute)
+eot_handout/
+eot_handout.zip
+*.pdf
+
+# Derived feature caches
+eot_cache/
+*.npz
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Local editor/agent settings
+.claude/

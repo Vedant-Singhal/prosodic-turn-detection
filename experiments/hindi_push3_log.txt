@@ -1,0 +1,67 @@
+=== base OOF ===
+43f dur05                                        eng=  1134 hin=   850 lhAUC=0.463 hop=(0.05,850)
+43+mfcc dur05                                    eng=  1116 hin=   850 lhAUC=0.494 hop=(0.05,850)
+sep16 dur05                                      eng=  1260 hin=   850 lhAUC=0.569 hop=(0.05,850)
+sep16 hard08                                     eng=  1260 hin=   850 lhAUC=0.692 hop=(0.05,850)
+43f hard08                                       eng=  1248 hin=   850 lhAUC=0.540 hop=(0.05,850)
+
+=== nested Hindi adjust (honest) ===
+  params for 43f dur05: [(0.5, 0.5, 0.0, 0.5, 781.875), (0.75, 1.0, 1.0, 0.0, 781.875), (1.0, 0.5, 0.5, 0.5, 840.0000000000002), (1.0, 1.0, 1.0, 0.0, 878.1249999999998), (0.25, 0.0, 0.0, 0.0, 849.9999999999999)]
+43f dur05+nestedAdj                              eng=  1134 hin=   865 lhAUC=0.651 hop=(0.05,850)
+  params for 43+mfcc dur05: [(0.25, 0.25, 0.25, 0.5, 760.625), (0.5, 0.75, 1.0, 0.0, 801.2499999999999), (0.5, 0.5, 1.0, 0.0, 801.2499999999999), (1.5, 1.5, 1.0, 0.5, 863.7500000000001), (0.5, 0.75, 0.0, 0.0, 849.9999999999999)]
+43+mfcc dur05+nestedAdj                          eng=  1116 hin=   895 lhAUC=0.627 hop=(0.05,850)
+  params for sep16 dur05: [(0.0, 0.5, 0.0, 0.5, 745.0000000000001), (1.0, 1.5, 0.0, 0.0, 771.25), (0.25, 0.5, 0.5, 0.25, 792.5000000000001), (0.5, 0.75, 0.25, 0.25, 828.1250000000002), (0.25, 1.0, 0.0, 0.0, 813.75)]
+sep16 dur05+nestedAdj                            eng=  1260 hin=   857 lhAUC=0.702 hop=(0.05,850)
+  params for sep16 hard08: [(0.5, 0.5, 0.0, 0.5, 711.25), (0.5, 0.75, 0.0, 0.0, 780.6250000000001), (0.5, 0.25, 0.5, 0.25, 809.9999999999999), (0.0, 0.5, 0.0, 0.0, 824.3749999999999), (0.5, 0.5, 0.0, 0.5, 809.9999999999999)]
+sep16 hard08+nestedAdj                           eng=  1260 hin=   850 lhAUC=0.761 hop=(0.05,850)
+  params for 43f hard08: [(1.0, 1.0, 0.5, 0.25, 745.0000000000001), (0.75, 1.0, 1.0, 0.0, 771.25), (1.5, 1.0, 0.0, 0.25, 839.9999999999999), (0.75, 1.0, 1.0, 0.0, 868.7499999999998), (1.5, 1.5, 0.0, 0.5, 824.3749999999999)]
+43f hard08+nestedAdj                             eng=  1248 hin=   887 lhAUC=0.716 hop=(0.05,850)
+
+=== oracle adjust on full Hindi (UPPER BOUND, not honest) ===
+  43f dur05: a=0.75 b=1.0 c=0.5 d=0.25 -> 850ms
+43f dur05+oracleAdj                              eng=  1134 hin=   850 lhAUC=0.746 hop=(0.2,650)
+  43+mfcc dur05: a=0.25 b=0.75 c=0.25 d=0.0 -> 850ms
+43+mfcc dur05+oracleAdj                          eng=  1116 hin=   850 lhAUC=0.677 hop=(0.05,850)
+  sep16 dur05: a=0.25 b=1.0 c=0.0 d=0.0 -> 818ms
+sep16 dur05+oracleAdj                            eng=  1260 hin=   818 lhAUC=0.776 hop=(0.25,750)
+  sep16 hard08: a=1.0 b=0.75 c=1.0 d=0.0 -> 802ms
+sep16 hard08+oracleAdj                           eng=  1260 hin=   802 lhAUC=0.823 hop=(0.2,650)
+  43f hard08: a=1.5 b=1.0 c=0.0 d=0.25 -> 840ms
+43f hard08+oracleAdj                             eng=  1248 hin=   840 lhAUC=0.737 hop=(0.05,800)
+
+=== simple pause_index demotion grid (nested) ===
+  fold lam=0.4 thr=0 train=779
+  fold lam=0.4 thr=0 train=846
+  fold lam=0.0 thr=0 train=850
+  fold lam=0.4 thr=0 train=944
+  fold lam=0.0 thr=0 train=850
+43+mfcc+ixDemote nested                          eng=  1116 hin=   850 lhAUC=0.583 hop=(0.05,850)
+
+=== fade-promote + ix-demote nested ===
+  fold ix=0.5/0 fade=0.2 train=790
+  fold ix=0.0/0 fade=0.0 train=850
+  fold ix=0.0/0 fade=0.0 train=850
+  fold ix=0.5/0 fade=0.2 train=944
+  fold ix=0.0/0 fade=0.0 train=850
+43+mfcc+fadeIx nested                            eng=  1116 hin=   850 lhAUC=0.508 hop=(0.05,850)
+
+=== TOP ===
+                   name    eng   hin    lhAUC
+ sep16 hard08+oracleAdj 1260.0 802.0 0.823333
+  sep16 dur05+oracleAdj 1260.0 818.0 0.775556
+   43f hard08+oracleAdj 1248.5 840.0 0.736667
+    43f dur05+oracleAdj 1134.5 849.5 0.745556
+          43+mfcc dur05 1115.5 850.0 0.494444
+43+mfcc dur05+oracleAdj 1115.5 850.0 0.676667
+43+mfcc+ixDemote nested 1115.5 850.0 0.583333
+  43+mfcc+fadeIx nested 1115.5 850.0 0.507778
+              43f dur05 1134.5 850.0 0.463333
+             43f hard08 1248.5 850.0 0.540000
+            sep16 dur05 1260.0 850.0 0.568889
+           sep16 hard08 1260.0 850.0 0.692222
+ sep16 hard08+nestedAdj 1260.0 850.0 0.761111
+  sep16 dur05+nestedAdj 1260.0 857.5 0.702222
+    43f dur05+nestedAdj 1134.5 865.0 0.651111
+   43f hard08+nestedAdj 1248.5 887.5 0.715556
+43+mfcc dur05+nestedAdj 1115.5 895.0 0.626667
+beat 850: 4 best hin 802.0000000000001

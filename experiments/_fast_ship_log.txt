@@ -1,0 +1,25 @@
+feats available=61 using first 43
+turns=100  pauses=248  AUC=0.704
+BEST @ <= 5% interrupted turns:
+  mean response delay : 1015 ms   <-- your score, lower is better
+  interrupted turns   : 5.0%
+  operating point     : threshold=0.55, delay=700 ms
+turns=100  pauses=248  AUC=0.704
+BEST @ <= 5% interrupted turns:
+  mean response delay : 831 ms   <-- your score, lower is better
+  interrupted turns   : 5.0%
+  operating point     : threshold=0.5, delay=650 ms
+HARDNEG in-sample: eng=1015 (th=0.55,d=700) hin=831 (th=0.5,d=650)
+HARDNEG OOF: eng=1248 hin=850
+HINDI WIN via hardneg
+turns=100  pauses=248  AUC=0.704
+BEST @ <= 5% interrupted turns:
+  mean response delay : 1015 ms   <-- your score, lower is better
+  interrupted turns   : 5.0%
+  operating point     : threshold=0.55, delay=700 ms
+turns=100  pauses=248  AUC=0.704
+BEST @ <= 5% interrupted turns:
+  mean response delay : 831 ms   <-- your score, lower is better
+  interrupted turns   : 5.0%
+  operating point     : threshold=0.5, delay=650 ms
+SHIPPED hardneg: eng=1015 hin=831

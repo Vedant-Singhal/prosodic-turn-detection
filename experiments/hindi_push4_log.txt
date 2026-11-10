@@ -1,0 +1,96 @@
+BASE sep16/hard: eng=1260 hin=850 lhAUC=0.692
+
+BASE sep16/hard Hindi top feasible ops:
+     850 ms  cut=5.0%  th=0.05 d=850
+     850 ms  cut=5.0%  th=0.1 d=850
+     850 ms  cut=5.0%  th=0.15 d=850
+     850 ms  cut=5.0%  th=0.2 d=850
+     865 ms  cut=5.0%  th=0.25 d=850
+     872 ms  cut=5.0%  th=0.3 d=850
+     895 ms  cut=5.0%  th=0.35 d=850
+     900 ms  cut=5.0%  th=0.05 d=900
+  stage2 C=0.25: hin=850 lhAUC=0.692
+  stage2 C=0.5: hin=850 lhAUC=0.689
+  stage2 C=1.0: hin=850 lhAUC=0.692
+  stage2 C=2.0: hin=850 lhAUC=0.689
+  baggedAdj: hin=850 lhAUC=0.776
+  jointStage2: eng=1304 hin=850
+BASE 43/dur05: eng=1134 hin=850 lhAUC=0.463
+
+BASE 43/dur05 Hindi top feasible ops:
+     850 ms  cut=5.0%  th=0.05 d=850
+     872 ms  cut=5.0%  th=0.1 d=850
+     872 ms  cut=5.0%  th=0.15 d=850
+     880 ms  cut=5.0%  th=0.2 d=850
+     900 ms  cut=5.0%  th=0.05 d=900
+     921 ms  cut=5.0%  th=0.1 d=900
+     921 ms  cut=5.0%  th=0.15 d=900
+     925 ms  cut=5.0%  th=0.25 d=850
+  stage2 C=0.25: hin=850 lhAUC=0.660
+  stage2 C=0.5: hin=850 lhAUC=0.657
+  stage2 C=1.0: hin=850 lhAUC=0.657
+  stage2 C=2.0: hin=850 lhAUC=0.652
+  baggedAdj: hin=865 lhAUC=0.694
+  jointStage2: eng=1262 hin=850
+BASE 51/dur05: eng=1116 hin=850 lhAUC=0.494
+
+BASE 51/dur05 Hindi top feasible ops:
+     850 ms  cut=5.0%  th=0.05 d=850
+     865 ms  cut=5.0%  th=0.1 d=850
+     880 ms  cut=5.0%  th=0.15 d=850
+     895 ms  cut=5.0%  th=0.2 d=850
+     900 ms  cut=5.0%  th=0.05 d=900
+     914 ms  cut=5.0%  th=0.1 d=900
+     928 ms  cut=5.0%  th=0.15 d=900
+     932 ms  cut=5.0%  th=0.25 d=850
+  stage2 C=0.25: hin=850 lhAUC=0.640
+  stage2 C=0.5: hin=850 lhAUC=0.636
+  stage2 C=1.0: hin=850 lhAUC=0.632
+  stage2 C=2.0: hin=850 lhAUC=0.632
+  baggedAdj: hin=865 lhAUC=0.710
+  jointStage2: eng=1210 hin=850
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+/home/vedant/speedrun/plivoai/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+BASE 51/hard: eng=1286 hin=857 lhAUC=0.552
+
+BASE 51/hard Hindi top feasible ops:
+     857 ms  cut=5.0%  th=0.05 d=850
+     865 ms  cut=5.0%  th=0.1 d=850
+     895 ms  cut=5.0%  th=0.15 d=850
+     907 ms  cut=5.0%  th=0.05 d=900
+     910 ms  cut=5.0%  th=0.2 d=850
+     914 ms  cut=5.0%  th=0.1 d=900
+     932 ms  cut=5.0%  th=0.25 d=850
+     942 ms  cut=5.0%  th=0.15 d=900
+  stage2 C=0.25: hin=850 lhAUC=0.643
+  stage2 C=0.5: hin=850 lhAUC=0.639
+  stage2 C=1.0: hin=850 lhAUC=0.638
+  stage2 C=2.0: hin=850 lhAUC=0.637
+  baggedAdj: hin=865 lhAUC=0.697
+  jointStage2: eng=1270 hin=850
+
+TOP:
+      base       method    eng   hin    lhAUC
+  51/dur05 stage2_C0.25 1115.5 850.0 0.640000
+  51/dur05  stage2_C0.5 1115.5 850.0 0.635556
+  51/dur05  stage2_C1.0 1115.5 850.0 0.632222
+  51/dur05  stage2_C2.0 1115.5 850.0 0.632222
+  43/dur05 stage2_C0.25 1134.5 850.0 0.660000
+  43/dur05  stage2_C0.5 1134.5 850.0 0.656667
+  43/dur05  stage2_C1.0 1134.5 850.0 0.656667
+  43/dur05  stage2_C2.0 1134.5 850.0 0.652222
+  51/dur05  jointStage2 1210.0 850.0 0.573333
+sep16/hard stage2_C0.25 1260.0 850.0 0.692222
+sep16/hard  stage2_C0.5 1260.0 850.0 0.688889
+sep16/hard  stage2_C1.0 1260.0 850.0 0.692222
+sep16/hard  stage2_C2.0 1260.0 850.0 0.688889
+sep16/hard    baggedAdj 1260.0 850.0 0.775556
+  43/dur05  jointStage2 1262.0 850.0 0.598889
+   51/hard  jointStage2 1270.0 850.0 0.595556
+   51/hard stage2_C0.25 1286.5 850.0 0.643333
+   51/hard  stage2_C0.5 1286.5 850.0 0.638889
+   51/hard  stage2_C1.0 1286.5 850.0 0.637778
+   51/hard  stage2_C2.0 1286.5 850.0 0.636667
+beat 0 best 849.9999999999995
